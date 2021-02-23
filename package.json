@@ -1,0 +1,41 @@
+{
+  "name": "insynctive",
+  "version": "1.0.0",
+  "description": "Provides connectivity to Pella Insynctive Bridge over network",
+  "main": "index.js",
+  "scripts": {
+    "prepublishOnly": "rm -rf ./lib && npm run build",
+    "build": "babel ./src --out-dir ./dist",
+    "start": "npm build && node preview/server.js",
+    "test": "eslint src preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stsvilik/insynctive.git"
+  },
+  "keywords": [
+    "pella",
+    "insynctive",
+    "bridge",
+    "home",
+    "automation",
+    "door",
+    "sensors",
+    "window",
+    "sensors"
+  ],
+  "author": "Simon Tsvilik",
+  "license": "GNU",
+  "dependencies": {
+    "log4js": "^6.3.0",
+    "telnet-client": "^1.4.6"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "eslint": "^7.20.0",
+    "express": "^4.17.1"
+  }
+}

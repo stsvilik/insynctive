@@ -1,0 +1,15 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+.idea
+.editorconfig
+
+/src
+/preview
+
+babel.config.js
