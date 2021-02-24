@@ -1,6 +1,6 @@
 {
   "name": "insynctive",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Provides connectivity to Pella Insynctive Bridge over network",
   "main": "index.js",
   "scripts": {
