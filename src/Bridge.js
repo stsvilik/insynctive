@@ -3,7 +3,7 @@ import EventEmitter from "events";
 import log4js from "log4js";
 
 const { LOG_LEVEL = "off" } = process.env;
-const RX_STATUS_CHANGE = /POINTSTATUS-(\d+),\$(\d+)/;
+const RX_STATUS_CHANGE = /POINTSTATUS(\d+),\$(\d+)/;
 
 module.exports = class Bridge extends EventEmitter {
     /**
@@ -73,16 +73,15 @@ module.exports = class Bridge extends EventEmitter {
      * @private
      */
     _handleData(data) {
-        const stringData = Buffer.from(data).toString();
-        const [, deviceIdStr, statusStr] = RX_STATUS_CHANGE.exec(stringData);
+        const stringData = Buffer.from(data).toString().replace(/\W+/m, "");
 
-        switch (true) {
-        case RX_STATUS_CHANGE.test(stringData):
+        if (RX_STATUS_CHANGE.test(stringData)) {
+            const [, deviceIdStr, statusStr] = RX_STATUS_CHANGE.exec(stringData);
+
             this.emit("deviceStatusChange", {
                 deviceId: parseInt(deviceIdStr, 10),
                 status: statusStr
             });
-            break;
         }
 
         this.logger.debug("Recv:", stringData);
