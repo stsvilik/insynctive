@@ -11,3 +11,6 @@ npm-debug.log*
 
 /src
 /preview
+.eslint*
+.prettierrc.js
+tsconfig.json
