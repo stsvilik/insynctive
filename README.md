@@ -1,10 +1,10 @@
-# Insynctive
+# Index
 
-Pella&reg; Insynctive&trade; Gateway over Network interface
+Pella&reg; Index&trade; Gateway over Network interface
 
 ## Description
 
-This repository is designed to work with Pella&reg; Insynctive&trade; Bridge connected to your LAN
+This repository is designed to work with Pella&reg; Index&trade; Bridge connected to your LAN
 (it will NOT work if Bridge is in Z-Wave pair mode). By default, your bridge will obtain dynamic IP address via DHCP. If
 you wish to assign a fixed IP address to your bridge, you may do so via Telnet interface. For more information refer to
 this guide [here](https://content.pella.com/cs/groups/public/documents/pel_image/mhat/mdq4/~edisp/p-048442.pdf).
@@ -14,7 +14,7 @@ executable).
 
 # Code API
 
-Interfaces provided by this code base can be used to query and observe events exposed by Pella&reg; Insynctive&reg;
+Interfaces provided by this code base can be used to query and observe events exposed by Pella&reg; Index&reg;
 Bridge connected to your local LAN.
 
 ## Installation
@@ -28,9 +28,9 @@ npm install insynctive
 In your code you may use above module in the following manner:
 
 ```javascript
-import Insynctive from "insynctive";
+import Index from "insynctive";
 
-const insynctive = new Insynctive("192.168.1.15");
+const insynctive = new Index("192.168.1.15");
 
 insynctive.on("onDeviceStatusChange", async (device) => {
     const deviceData = await device.toJSON();
@@ -45,7 +45,7 @@ insynctive.connect().then(async () => {
 
 ## API Interface
 
-- `class Insynctive(host)` - Root level object which represents Pella&reg; Insynctive&trade; Bridge itself.
+- `class Index(host)` - Root level object which represents Pella&reg; Index&trade; Bridge itself.
     - `{string} host` - IP address of your bridge device
     - Methods:
         - `{Promise<void>} connect()` - connects to the bridge device
@@ -75,7 +75,7 @@ insynctive.connect().then(async () => {
 
 ### Environment variables
 
-- `INSYNCTIVE_BRIDGE_IP` - IP address of the Pella&reg; Insynctive&trade; Bridge
+- `INSYNCTIVE_BRIDGE_IP` - IP address of the Pella&reg; Index&trade; Bridge
 - `LOG_LEVEL` - log level for debugging. Defaults to "off". Available options are "debug", "error", "warning", "info", "
   fatal".
 
@@ -93,4 +93,4 @@ Example: `http://localhost:3000`
 
 ### Disclosures
 
-**Insynctive&trade;** - Is a registered trademark of Pella&reg; corporation. 
+**Index&trade;** - Is a registered trademark of Pella&reg; corporation. 

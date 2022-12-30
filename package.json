@@ -1,12 +1,19 @@
 {
   "name": "insynctive",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "Provides connectivity to Pella Insynctive Bridge over network",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "prepublishOnly": "rm -rf ./lib && npm run build",
-    "build": "babel ./src --out-dir ./dist",
-    "start": "npm build && node preview/server.js",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "lint": "gts lint",
+    "posttest": "npm run lint",
+    "prepare": "npm run compile",
+    "prepublishOnly": "run-s clean compile",
+    "pretest": "npm run compile",
+    "start": "run-s compile start:express",
+    "start:express": "node preview/server.js",
     "test": "eslint src preview"
   },
   "repository": {
@@ -27,15 +34,15 @@
   "author": "Simon Tsvilik",
   "license": "GNU",
   "dependencies": {
-    "log4js": "^6.3.0",
-    "telnet-client": "^1.4.9"
+    "log4js": "^6.7.1",
+    "npm-run-all": "^4.1.5",
+    "telnet-client": "^2.0.6"
   },
   "devDependencies": {
-    "@babel/cli": "^7.15.7",
-    "@babel/core": "^7.15.5",
-    "@babel/plugin-proposal-class-properties": "^7.14.5",
-    "@babel/preset-env": "^7.15.6",
-    "eslint": "^7.32.0",
-    "express": "^4.17.1"
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "express": "^4.18.2",
+    "gts": "^3.1.1",
+    "typescript": "~4.9.4"
   }
 }
