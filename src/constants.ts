@@ -20,10 +20,10 @@ export const DEVICE_TYPE_NAMES: {[key: string]: DeviceType} = {
 };
 
 export const DEVICE_TYPES = {
+  BLIND: '13',
+  DOOR_LOCK: '0D',
   DOOR_OR_WINDOW: '01',
   GARAGE_DOOR: '03',
-  DOOR_LOCK: '0D',
-  BLIND: '13',
 };
 
 export const GARAGE_DOOR_STATE = {
@@ -35,6 +35,8 @@ export const DOOR_WINDOW_STATE = {
   CLOSED: new Set(['00', '02', '04', '06', '20']), //00 - closed, 02 - connected/re-connected
   OPEN: new Set(['01', '05', '21']), //01 - open
 };
+
+export const DOOR_TEMPER_CODES = new Set(['04', '05', '06']);
 
 export const COMMANDS = {
   BATTERY_STATUS: '?POINTBATTERYGET-',

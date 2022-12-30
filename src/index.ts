@@ -11,16 +11,15 @@ const logger = log4js.getLogger('Global');
 logger.level = LOG_LEVEL || 'off';
 
 export interface BridgeInfo {
-  version: string;
-  mac: string;
   host: string;
+  mac: string;
+  version: string;
 }
 
 export default class Insynctive extends EventEmitter {
-  readonly host: string;
-  private readonly devices: Map<number, Device>;
   private readonly bridge: Bridge;
-
+  private readonly devices: Map<number, Device>;
+  readonly host: string;
   constructor(host: string) {
     super();
 
@@ -28,9 +27,9 @@ export default class Insynctive extends EventEmitter {
       throw new Error(`Invalid host IP specified (${host})`);
     }
 
-    this.host = host;
-    this.devices = new Map();
     this.bridge = new Bridge(host);
+    this.devices = new Map();
+    this.host = host;
   }
 
   connect() {
@@ -105,5 +104,7 @@ export default class Insynctive extends EventEmitter {
 
       this.emit('onDeviceStatusChange', {device});
     }
+
+    this.getDevices(true);
   }
 }

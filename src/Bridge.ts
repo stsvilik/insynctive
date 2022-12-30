@@ -12,6 +12,12 @@ interface CommandQueueItem {
   cb: (value: string) => void;
 }
 
+interface BridgeOptions {
+  connectionAttempts?: number;
+  reconnectOnFail?: boolean;
+  retryInterval?: number;
+}
+
 const {LOG_LEVEL = 'off', DEBUG_BRIDGE} = process.env;
 const RX_STATUS_CHANGE = /POINTSTATUS-(\d+),\$(\d+)/;
 const RX_RESPONSE = /^[\w-,$: ]+$/;
@@ -25,30 +31,44 @@ export default class Bridge extends EventEmitter {
   private connected: boolean = false;
   private connection: Telnet;
   private commandQueue: CommandQueueItem[];
+  private connectionAttempts: number;
+  private retryInterval: number;
+  private reconnectOnFail: boolean;
   static events = {
     DEVICE_STATUS_CHANGE: 'deviceStatusChange',
   };
 
-  constructor(hostIp: string) {
+  constructor(hostIp: string, options: BridgeOptions = {}) {
     super();
 
     this.commandQueue = [];
     this.connection = new Telnet();
     this.configuration = {
+      debug: DEBUG_BRIDGE === 'true',
       host: hostIp,
-      shellPrompt: null,
       negotiationMandatory: false,
       ors: '\r\n',
+      shellPrompt: null,
       timeout: TELNET_TIMEOUT,
-      debug: DEBUG_BRIDGE === 'true',
     };
+    this.connectionAttempts = options?.connectionAttempts || 3;
     this.logger = log4js.getLogger('Bridge');
     this.logger.level = LOG_LEVEL;
+    this.reconnectOnFail = options?.reconnectOnFail || true;
+    this.retryInterval = options?.retryInterval || 60 * 1000;
   }
 
   #onClose() {
     this.logger.error('Connection to the bridge was closed!');
     this.connected = false;
+
+    if (this.reconnectOnFail && this.connectionAttempts > 0) {
+      this.logger.warn(
+        `Will try to reconnect in ${this.retryInterval / 1000} sec.`
+      );
+      setTimeout(() => this.connect, this.retryInterval);
+      this.connectionAttempts--;
+    }
   }
 
   async #enqueue(cmd: string, cb: (value: string) => void) {

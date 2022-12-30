@@ -5,6 +5,7 @@ import {
   DEVICE_TYPES,
   DOOR_WINDOW_STATE,
   GARAGE_DOOR_STATE,
+  DOOR_TEMPER_CODES,
   DeviceType,
   DeviceStatus,
 } from './constants';
@@ -17,20 +18,17 @@ export default class Device {
   id: number;
   deviceId: string;
   private bridge: Bridge;
-  typeCode?: string | null;
-  deviceType?: DeviceType | null;
-  serialNumber?: string | null;
-  statusCode?: string | null;
+  typeCode?: string;
+  deviceType?: DeviceType;
+  serialNumber?: string;
+  statusCode?: string;
   status?: string;
+  temper?: boolean;
 
   constructor(id: number, bridge: Bridge) {
     this.id = id;
     this.deviceId = padLeading(PAD_MAX, id);
     this.bridge = bridge;
-    this.typeCode = null;
-    this.deviceType = null;
-    this.serialNumber = null;
-    this.statusCode = null;
   }
 
   async getTypeCode() {
@@ -40,7 +38,7 @@ export default class Device {
   }
 
   async getDeviceType() {
-    const typeCode = (await this.getTypeCode()) || '';
+    const typeCode = await this.getTypeCode();
 
     this.deviceType =
       this.deviceType || DEVICE_TYPE_NAMES[typeCode] || 'Unknown';
@@ -54,10 +52,15 @@ export default class Device {
     return this.statusCode;
   }
 
+  getTemperState() {
+    return this.typeCode && DOOR_TEMPER_CODES.has(this.typeCode);
+  }
+
   setStatusCode(statusCode: string) {
     this.statusCode = statusCode;
 
-    this.status = this.#toDeviceStatus(this.typeCode || '', statusCode);
+    this.status = this.#toDeviceStatus(this.typeCode, statusCode);
+    this.temper = DOOR_TEMPER_CODES.has(this.typeCode || '');
   }
 
   async getStatus() {
@@ -100,6 +103,7 @@ export default class Device {
       serialNumber,
       status,
       type,
+      temper: this.getTemperState(),
     };
   }
 
@@ -108,7 +112,7 @@ export default class Device {
       (await this.bridge.sendCommand(
         `${COMMANDS.DEVICE_INFO}${this.deviceId}`
       )) || '';
-    const [status] = response.match(RX_HEX) || [];
+    const [status = ''] = response.match(RX_HEX) || [];
 
     return status;
   }
