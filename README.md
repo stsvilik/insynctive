@@ -32,7 +32,7 @@ import Index from "insynctive";
 
 const insynctive = new Index("192.168.1.15");
 
-insynctive.on("onDeviceStatusChange", async (device) => {
+insynctive.on("onDeviceStatusChange", async ({ device }) => {
     const deviceData = await device.toJSON();
 
     console.log(deviceData);
