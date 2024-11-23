@@ -1,6 +1,6 @@
 # Index
 
-Pella&reg; Index&trade; Gateway over Network interface
+Pella&reg; Insynctive&trade; Gateway over Network interface
 
 ## Description
 
@@ -28,9 +28,9 @@ npm install insynctive
 In your code you may use above module in the following manner:
 
 ```javascript
-import Index from "insynctive";
+import Insynctive from "insynctive";
 
-const insynctive = new Index("192.168.1.15");
+const insynctive = new Insynctive("192.168.1.15");
 
 insynctive.on("onDeviceStatusChange", async (device) => {
     const deviceData = await device.toJSON();
@@ -45,7 +45,7 @@ insynctive.connect().then(async () => {
 
 ## API Interface
 
-- `class Index(host)` - Root level object which represents Pella&reg; Index&trade; Bridge itself.
+- `class Insynctive(host)` - Root level object which represents Pella&reg; Index&trade; Bridge itself.
     - `{string} host` - IP address of your bridge device
     - Methods:
         - `{Promise<void>} connect()` - connects to the bridge device
@@ -93,4 +93,4 @@ Example: `http://localhost:3000`
 
 ### Disclosures
 
-**Index&trade;** - Is a registered trademark of Pella&reg; corporation. 
+**Insynctive&trade;** - Is a registered trademark of Pella&reg; corporation. 
