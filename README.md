@@ -4,7 +4,7 @@ Pella&reg; Index&trade; Gateway over Network interface
 
 ## Description
 
-This repository is designed to work with Pella&reg; Index&trade; Bridge connected to your LAN
+This repository is designed to work with Pella&reg; Insynctive&trade; Bridge connected to your LAN
 (it will NOT work if Bridge is in Z-Wave pair mode). By default, your bridge will obtain dynamic IP address via DHCP. If
 you wish to assign a fixed IP address to your bridge, you may do so via Telnet interface. For more information refer to
 this guide [here](https://content.pella.com/cs/groups/public/documents/pel_image/mhat/mdq4/~edisp/p-048442.pdf).
