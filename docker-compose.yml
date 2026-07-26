@@ -1,0 +1,24 @@
+x-insynctive-common: &insynctive-common
+  build: .
+  restart: unless-stopped
+  env_file:
+    - .env
+
+services:
+  # Publishes devices to Home Assistant via MQTT Discovery. Runs by default.
+  ha-bridge:
+    <<: *insynctive-common
+    container_name: insynctive-ha-bridge
+    command: ["node", "preview/ha-bridge.js"]
+
+  # Optional REST demo (see README). Not started by default since it opens
+  # its own telnet connection to the same physical bridge as ha-bridge -
+  # running both at once may not be supported by the bridge's hardware.
+  # Start explicitly with: docker compose --profile rest up
+  rest-api:
+    <<: *insynctive-common
+    container_name: insynctive-rest-api
+    profiles: ["rest"]
+    ports:
+      - '3000:3000'
+    command: ["node", "preview/server.js"]

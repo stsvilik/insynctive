@@ -22,9 +22,13 @@ export const DEVICE_TYPES = {
   GARAGE_DOOR: '03',
 };
 
-export const GARAGE_DOOR_STATE = {
+// Door Lock uses its own dedicated code set, not shared with garage door or
+// door/window contacts - confirmed against github.com/johnsonej23/pella_insynctive,
+// an independently-developed, production-used implementation. Anything outside
+// these known values stays "Unknown" rather than guessing.
+export const DOOR_LOCK_STATE = {
   LOCKED: new Set(['00', '04']),
-  UNLOCKED: new Set(['01', '02', '05', '06']),
+  UNLOCKED: new Set(['02', '06']),
 };
 
 export const DOOR_WINDOW_STATE = {
@@ -41,6 +45,6 @@ export const COMMANDS = {
   DEVICE_ID: '?POINTID-',
   DEVICE_INFO: '?POINTDEVICE-',
   DEVICE_STATUS: '?POINTSTATUS-',
-  SET_DEVICE_STATUS: '?POINTSET-',
+  SET_DEVICE_STATUS: '!POINTSET-',
   SET_STATIC_IP: '!BRIDGESETIP,$',
 };

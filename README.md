@@ -91,6 +91,73 @@ Example: `http://localhost:3000`
 - `/devices` - returns an array of devices as JSON (slow)
 - `/device/:id` - returns device details as JSON
 
+### Home Assistant
+
+This repo includes an MQTT bridge (`preview/ha-bridge.js`) that publishes devices to Home Assistant using
+[MQTT Discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery), keyed off the same
+`onDeviceStatusChange` event used by the programmatic API above — state updates are pushed in real time, not polled.
+
+This is a **read-only** integration: it reports sensor/lock/battery state to HA, it does not yet support sending
+commands (e.g. lock/unlock, open/close garage door) back to the bridge.
+
+Prerequisites: an MQTT broker reachable from wherever this runs (e.g. the Mosquitto add-on if you're running HA OS).
+
+```shell
+INSYNCTIVE_BRIDGE_IP=x.x.x.x MQTT_URL=mqtt://localhost:1883 npm run start:ha
+```
+
+#### Running via Docker Compose
+
+```shell
+npm run compile   # produces lib/, which the image copies in
+cp .env.example .env   # then fill in INSYNCTIVE_BRIDGE_IP and MQTT_URL
+docker compose up --build
+```
+
+This starts the `ha-bridge` service only. The REST demo (`preview/server.js`) is also available as an
+optional `rest-api` service, but isn't started by default - `ha-bridge` and `rest-api` would each open
+their own telnet connection to the same physical bridge, which its hardware may not support running
+concurrently. Start it explicitly if you want it: `docker compose --profile rest up`.
+
+#### Environment variables
+
+- `MQTT_URL` - MQTT broker URL, e.g. `mqtt://localhost:1883` (required)
+- `MQTT_USERNAME` / `MQTT_PASSWORD` - MQTT broker credentials (optional)
+- `HA_DISCOVERY_PREFIX` - Home Assistant discovery topic prefix. Defaults to `homeassistant`
+- `MQTT_TOPIC_PREFIX` - prefix used for this bridge's own state/availability topics. Defaults to `insynctive`
+
+#### Entity mapping
+
+| Device type | HA entity | device_class |
+|---|---|---|
+| Pella Door/Window | `binary_sensor` | `door` |
+| Pella Garage Door | `binary_sensor` | `door` |
+| Pella Door Lock | `binary_sensor` | `lock` |
+| Pella Blind | *(not exposed - see limitations below)* | - |
+| All types | `sensor` (battery %) | `battery` |
+| All types | `binary_sensor` (tamper) | `tamper` |
+
+Status-code decoding for Garage Door and Door Lock was revised based on comparison against an independent,
+production-used implementation ([johnsonej23/pella_insynctive](https://github.com/johnsonej23/pella_insynctive) -
+a Home Assistant custom integration for the same bridge). Garage Door is now decoded as a plain open/closed
+contact rather than Locked/Unlocked, and Door Lock uses its own dedicated, narrower status-code set instead of
+sharing Garage Door's. Neither of these device types is represented in this repo's own test hardware (only
+Door/Window and Door Lock are), so **Garage Door decoding in particular is unverified against real hardware** -
+if you have one and see wrong behavior, please open an issue.
+
+#### Known limitations
+
+- **Blinds report no usable status.** The underlying protocol decoding for blind position isn't implemented, so
+  blinds are only exposed via their battery/tamper entities, not a state entity. The referenced
+  [johnsonej23/pella_insynctive](https://github.com/johnsonej23/pella_insynctive) project decodes it as a 0-100
+  position value (inverted) and exposes it as a `cover` entity with open/close/set-position support - a reasonable
+  starting point if this gets implemented here later.
+- **Mid-session bridge drops aren't reflected in HA's availability.** The bridge-offline (`will`) message only fires
+  if the whole Node process dies. If just the telnet connection to the physical Pella bridge drops (and later
+  reconnects), HA won't show the device as unavailable during that window, since `Bridge`/`Insynctive` don't yet
+  expose a public event for that transition.
+- **No control support.** Lock/unlock and garage door commands aren't implemented (see above).
+
 ### Disclosures
 
 **Insynctive&trade;** - Is a registered trademark of Pella&reg; corporation. 

@@ -19,7 +19,7 @@ interface BridgeOptions {
 }
 
 const {LOG_LEVEL = 'off', DEBUG_BRIDGE} = process.env;
-const RX_STATUS_CHANGE = /POINTSTATUS-(\d+),\$(\d+)/;
+const RX_STATUS_CHANGE = /POINTSTATUS-(\d+),\$([0-9A-Fa-f]+)/;
 const RX_RESPONSE = /^[\w-,$: ]+$/;
 const RX_INVALID_RESPONSE_CHARS = /[^\w[\-,$: \r\n]+/gm;
 const RX_NEW_LINE = /\r\n/;

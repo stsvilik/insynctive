@@ -14,6 +14,7 @@
     "pretest": "npm run compile",
     "start": "run-s compile start:express",
     "start:express": "node preview/server.js",
+    "start:ha": "node preview/ha-bridge.js",
     "test": "eslint src preview"
   },
   "repository": {
@@ -43,6 +44,7 @@
     "express": "^5.2.1",
     "globals": "^17.7.0",
     "gts": "^7.0.0",
+    "mqtt": "^5.15.2",
     "npm-run-all2": "^8.0.4",
     "typescript": "~5.9.3"
   }
