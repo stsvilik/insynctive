@@ -131,16 +131,27 @@ concurrently. Start it explicitly if you want it: `docker compose --profile rest
 | Device type | HA entity | device_class |
 |---|---|---|
 | Pella Door/Window | `binary_sensor` | `door` |
-| Pella Garage Door | `binary_sensor` | `lock` |
+| Pella Garage Door | `binary_sensor` | `door` |
 | Pella Door Lock | `binary_sensor` | `lock` |
 | Pella Blind | *(not exposed - see limitations below)* | - |
 | All types | `sensor` (battery %) | `battery` |
 | All types | `binary_sensor` (tamper) | `tamper` |
 
+Status-code decoding for Garage Door and Door Lock was revised based on comparison against an independent,
+production-used implementation ([johnsonej23/pella_insynctive](https://github.com/johnsonej23/pella_insynctive) -
+a Home Assistant custom integration for the same bridge). Garage Door is now decoded as a plain open/closed
+contact rather than Locked/Unlocked, and Door Lock uses its own dedicated, narrower status-code set instead of
+sharing Garage Door's. Neither of these device types is represented in this repo's own test hardware (only
+Door/Window and Door Lock are), so **Garage Door decoding in particular is unverified against real hardware** -
+if you have one and see wrong behavior, please open an issue.
+
 #### Known limitations
 
 - **Blinds report no usable status.** The underlying protocol decoding for blind position isn't implemented, so
-  blinds are only exposed via their battery/tamper entities, not a state entity.
+  blinds are only exposed via their battery/tamper entities, not a state entity. The referenced
+  [johnsonej23/pella_insynctive](https://github.com/johnsonej23/pella_insynctive) project decodes it as a 0-100
+  position value (inverted) and exposes it as a `cover` entity with open/close/set-position support - a reasonable
+  starting point if this gets implemented here later.
 - **Mid-session bridge drops aren't reflected in HA's availability.** The bridge-offline (`will`) message only fires
   if the whole Node process dies. If just the telnet connection to the physical Pella bridge drops (and later
   reconnects), HA won't show the device as unavailable during that window, since `Bridge`/`Insynctive` don't yet

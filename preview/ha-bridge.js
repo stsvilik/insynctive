@@ -28,17 +28,17 @@ const mqttClient = mqtt.connect(MQTT_URL, {
   will: {topic: availabilityTopic, payload: 'offline', retain: true},
 });
 
-// Locked/Unlocked-style devices (garage door + door lock) share the same
-// mapping; door/window is Open/Closed; blinds have no reliable status
-// decode yet, so they're intentionally left out of this table.
+// Door/Window and Garage Door both report a plain open/closed contact;
+// Door Lock is the only type with Locked/Unlocked semantics. Blinds have no
+// reliable status decode yet, so they're intentionally left out of this table.
 const ENTITY_TYPES = {
   'Pella Door/Window': {
     deviceClass: 'door',
     template: "{{ 'ON' if value_json.status == 'Open' else 'OFF' }}",
   },
   'Pella Garage Door': {
-    deviceClass: 'lock',
-    template: "{{ 'ON' if value_json.status == 'Unlocked' else 'OFF' }}",
+    deviceClass: 'door',
+    template: "{{ 'ON' if value_json.status == 'Open' else 'OFF' }}",
   },
   'Pella Door Lock': {
     deviceClass: 'lock',
@@ -122,9 +122,17 @@ async function publishDiscoveryConfig(deviceId, type) {
 }
 
 async function publishState(device) {
-  const payload = await device.toJSON();
+  // typeCode/statusCode are the raw protocol values behind the decoded
+  // type/status fields - included here (not in Device.toJSON() itself,
+  // which is the published library's public API) purely so raw values are
+  // visible for debugging via MQTT without extra tooling.
+  const [payload, typeCode, statusCode] = await Promise.all([
+    device.toJSON(),
+    device.getTypeCode(),
+    device.getStatusCode(),
+  ]);
 
-  await publish(stateTopic(device.id), payload);
+  await publish(stateTopic(device.id), {...payload, typeCode, statusCode});
 }
 
 mqttClient.on('connect', async () => {

@@ -4,7 +4,7 @@ import {
   DEVICE_TYPE_NAMES,
   DEVICE_TYPES,
   DOOR_WINDOW_STATE,
-  GARAGE_DOOR_STATE,
+  DOOR_LOCK_STATE,
   DOOR_TEMPER_CODES,
   DeviceType,
   DeviceStatus,
@@ -149,18 +149,19 @@ export default class Device {
 
   #toDeviceStatus(typeCode = '', statusCode = ''): DeviceStatus {
     switch (typeCode) {
-      case DEVICE_TYPES.GARAGE_DOOR:
       case DEVICE_TYPES.DOOR_LOCK:
         switch (true) {
-          case GARAGE_DOOR_STATE.LOCKED.has(statusCode):
+          case DOOR_LOCK_STATE.LOCKED.has(statusCode):
             return 'Locked';
-          case GARAGE_DOOR_STATE.UNLOCKED.has(statusCode):
+          case DOOR_LOCK_STATE.UNLOCKED.has(statusCode):
             return 'Unlocked';
           default:
             return 'Unknown';
         }
       case DEVICE_TYPES.BLIND:
         return 'Unknown';
+      // Garage Door reports as a plain open/closed contact, same as
+      // door/window - falls through to the default branch below.
       default:
         switch (true) {
           case DOOR_WINDOW_STATE.CLOSED.has(statusCode):
