@@ -51,11 +51,11 @@ export default class Bridge extends EventEmitter {
       shellPrompt: null,
       timeout: TELNET_TIMEOUT,
     };
-    this.connectionAttempts = options?.connectionAttempts || 3;
+    this.connectionAttempts = options?.connectionAttempts ?? 3;
     this.logger = log4js.getLogger('Bridge');
     this.logger.level = LOG_LEVEL;
-    this.reconnectOnFail = options?.reconnectOnFail || true;
-    this.retryInterval = options?.retryInterval || 60 * 1000;
+    this.reconnectOnFail = options?.reconnectOnFail ?? true;
+    this.retryInterval = options?.retryInterval ?? 60 * 1000;
   }
 
   #onClose() {
@@ -64,9 +64,9 @@ export default class Bridge extends EventEmitter {
 
     if (this.reconnectOnFail && this.connectionAttempts > 0) {
       this.logger.warn(
-        `Will try to reconnect in ${this.retryInterval / 1000} sec.`
+        `Will try to reconnect in ${this.retryInterval / 1000} sec.`,
       );
-      setTimeout(() => this.connect, this.retryInterval);
+      setTimeout(() => this.connect(), this.retryInterval);
       this.connectionAttempts--;
     }
   }
@@ -106,15 +106,13 @@ export default class Bridge extends EventEmitter {
     } catch (error) {
       this.logger.error('Failure to disconnect from Pella Bridge', error);
     }
-
-    log4js.shutdown();
   }
 
   async sendCommand(command?: string): Promise<string | undefined> {
     if (!this.connected || !command) return;
 
-    return new Promise(resolve => {
-      this.#enqueue(command, value => resolve(value));
+    return new Promise((resolve, reject) => {
+      this.#enqueue(command, value => resolve(value)).catch(reject);
     });
   }
 

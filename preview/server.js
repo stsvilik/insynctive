@@ -18,7 +18,7 @@ app.get('/devices', async (req, res) => {
   try {
     const devicesMap = await insynctive.getDevices();
     const devices = await Promise.all(
-      [...devicesMap.values()].map(async device => await device.toJSON())
+      [...devicesMap.values()].map(async device => await device.toJSON()),
     );
 
     res.send(devices);
