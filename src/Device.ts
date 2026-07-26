@@ -53,14 +53,14 @@ export default class Device {
   }
 
   getTemperState() {
-    return this.typeCode && DOOR_TEMPER_CODES.has(this.typeCode);
+    return this.statusCode && DOOR_TEMPER_CODES.has(this.statusCode);
   }
 
   setStatusCode(statusCode: string) {
     this.statusCode = statusCode;
 
     this.status = this.#toDeviceStatus(this.typeCode, statusCode);
-    this.temper = DOOR_TEMPER_CODES.has(this.typeCode || '');
+    this.temper = DOOR_TEMPER_CODES.has(statusCode);
   }
 
   async getStatus() {
@@ -150,6 +150,7 @@ export default class Device {
   #toDeviceStatus(typeCode = '', statusCode = ''): DeviceStatus {
     switch (typeCode) {
       case DEVICE_TYPES.GARAGE_DOOR:
+      case DEVICE_TYPES.DOOR_LOCK:
         switch (true) {
           case GARAGE_DOOR_STATE.LOCKED.has(statusCode):
             return 'Locked';
