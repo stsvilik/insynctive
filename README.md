@@ -106,6 +106,19 @@ Prerequisites: an MQTT broker reachable from wherever this runs (e.g. the Mosqui
 INSYNCTIVE_BRIDGE_IP=x.x.x.x MQTT_URL=mqtt://localhost:1883 npm run start:ha
 ```
 
+#### Running via Docker Compose
+
+```shell
+npm run compile   # produces lib/, which the image copies in
+cp .env.example .env   # then fill in INSYNCTIVE_BRIDGE_IP and MQTT_URL
+docker compose up --build
+```
+
+This starts the `ha-bridge` service only. The REST demo (`preview/server.js`) is also available as an
+optional `rest-api` service, but isn't started by default - `ha-bridge` and `rest-api` would each open
+their own telnet connection to the same physical bridge, which its hardware may not support running
+concurrently. Start it explicitly if you want it: `docker compose --profile rest up`.
+
 #### Environment variables
 
 - `MQTT_URL` - MQTT broker URL, e.g. `mqtt://localhost:1883` (required)
