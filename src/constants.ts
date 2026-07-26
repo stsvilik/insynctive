@@ -6,11 +6,7 @@ export type DeviceType =
   | 'Unknown';
 
 export type DeviceStatus =
-  | 'Closed'
-  | 'Locked'
-  | 'Open'
-  | 'Unknown'
-  | 'Unlocked';
+  'Closed' | 'Locked' | 'Open' | 'Unknown' | 'Unlocked';
 
 export const DEVICE_TYPE_NAMES: {[key: string]: DeviceType} = {
   '01': 'Pella Door/Window',

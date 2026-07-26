@@ -110,7 +110,7 @@ export default class Device {
   async #getDeviceType() {
     const response =
       (await this.bridge.sendCommand(
-        `${COMMANDS.DEVICE_INFO}${this.deviceId}`
+        `${COMMANDS.DEVICE_INFO}${this.deviceId}`,
       )) || '';
     const [status = ''] = response.match(RX_HEX) || [];
 
@@ -120,7 +120,7 @@ export default class Device {
   async #getDeviceStatus() {
     const response =
       (await this.bridge.sendCommand(
-        `${COMMANDS.DEVICE_STATUS}${this.deviceId}`
+        `${COMMANDS.DEVICE_STATUS}${this.deviceId}`,
       )) || '';
     const [status] = response.match(RX_HEX) || [];
 
@@ -130,7 +130,7 @@ export default class Device {
   async #getDeviceBatteryStatus() {
     const response =
       (await this.bridge.sendCommand(
-        `${COMMANDS.BATTERY_STATUS}${this.deviceId}`
+        `${COMMANDS.BATTERY_STATUS}${this.deviceId}`,
       )) || '';
     const [percentage] = response.match(RX_HEX) || [];
 
@@ -140,7 +140,7 @@ export default class Device {
   async #getDeviceSerialNumber() {
     const response =
       (await this.bridge.sendCommand(
-        `${COMMANDS.DEVICE_ID}${this.deviceId}`
+        `${COMMANDS.DEVICE_ID}${this.deviceId}`,
       )) || '';
     const [serialNumber] = response.match(RX_HEX) || [];
 

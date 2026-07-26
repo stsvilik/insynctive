@@ -37,7 +37,7 @@ export default class Insynctive extends EventEmitter {
       await this.getDevices(true);
 
       this.bridge.on(Bridge.events.DEVICE_STATUS_CHANGE, event =>
-        this.#handleDeviceStatusChange(event)
+        this.#handleDeviceStatusChange(event),
       );
     });
   }
@@ -88,7 +88,7 @@ export default class Insynctive extends EventEmitter {
     }
 
     return await this.bridge.sendCommand(
-      `${COMMANDS.SET_STATIC_IP}${ipAddress}`
+      `${COMMANDS.SET_STATIC_IP}${ipAddress}`,
     );
   }
 
@@ -99,12 +99,10 @@ export default class Insynctive extends EventEmitter {
       device.setStatusCode(status);
 
       logger.info(
-        `Status change event: {id: ${device.deviceId}, status: ${device.status}}`
+        `Status change event: {id: ${device.deviceId}, status: ${device.status}}`,
       );
 
       this.emit('onDeviceStatusChange', {device});
     }
-
-    this.getDevices(true);
   }
 }

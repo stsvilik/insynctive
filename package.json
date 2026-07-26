@@ -34,15 +34,16 @@
   "author": "Simon Tsvilik",
   "license": "GNU",
   "dependencies": {
-    "log4js": "^6.7.1",
-    "npm-run-all": "^4.1.5",
-    "telnet-client": "^2.0.6"
+    "log4js": "^6.9.1",
+    "telnet-client": "^2.2.13"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
-    "@typescript-eslint/eslint-plugin": "^5.47.1",
-    "express": "^4.18.2",
-    "gts": "^3.1.1",
-    "typescript": "~4.9.4"
+    "@types/node": "^22.20.1",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "express": "^5.2.1",
+    "globals": "^17.7.0",
+    "gts": "^7.0.0",
+    "npm-run-all2": "^8.0.4",
+    "typescript": "~5.9.3"
   }
 }
