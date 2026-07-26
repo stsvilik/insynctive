@@ -8,6 +8,8 @@ npm-debug.log*
 
 .idea
 .editorconfig
+.claude
+tsconfig.tsbuildinfo
 
 /src
 /preview

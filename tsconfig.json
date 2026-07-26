@@ -5,7 +5,9 @@
     "outDir": "lib",
     "esModuleInterop": true,
     "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "NodeNext",
+    "composite": false,
+    "declaration": true
   },
   "include": [
     "src/**/*.ts",
